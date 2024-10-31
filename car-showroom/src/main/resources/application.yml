@@ -1,0 +1,65 @@
+
+server:
+  port: 9050
+
+masterDatabaseHost: "localhost"
+masterDatabasePort: 3306
+masterDatabaseSchema: showrooms
+masterDatabaseUsername: root
+masterDatabasePassword: "MyNewPass"
+
+spring:
+  application:
+    name: showrooms-service
+  datasource:
+    url: jdbc:mysql://${masterDatabaseHost}:${masterDatabasePort}/${masterDatabaseSchema}
+    username: ${masterDatabaseUsername}
+    password: ${masterDatabasePassword}
+    # mysql driver
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      hbm2ddl:
+        auto: validate
+#  flyway:
+#    enabled: true
+#    baseline-on-migrate: true
+#    locations:
+#      - classpath:migration
+    encoding: UTF-8
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  jackson:
+    default-property-inclusion: non_null
+
+#app:
+#  client:
+#    id: swagger
+#    secret: swagger
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+memcache:
+  hosts: 99.80.225.18:11211 #Ip where Memcache is installed
+  expiration: 900 #Expiration Time in seconds
+  never_expire: 0 #Never expires to 30 days
+
+# Logging Configuration
+logging:
+  config: "classpath:logback/logback-spring-dev.xml"
+  file:
+    name: ${spring.application.name}
+    path: /opt/logs/${spring.application.name}
+  file.max-history: 1
+  file.max-size: "100MB"
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:SSS} [%thread] [%-5level] %logger{55} : %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%-5level] %logger{55} : %msg%n"
+  level:
+    org.hibernate.engine.jdbc.batch.internal.BatchingBatch: DEBUG
+    root: info
