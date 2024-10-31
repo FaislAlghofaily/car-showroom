@@ -9,18 +9,16 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
-public enum CarStatusEnum {
-    AVAILABLE("Available"),
-    UNAVAILABLE("Unavailable"),
-    SOLD("Sold");
+public enum StatusEnum {
+    SUCCESS("Success"),
+    FAILED("Failed");
     private String status;
 
-    CarStatusEnum(String status) {
+    StatusEnum(String status) {
         this.status = status;
     }
 
-    private static final Map<String, CarStatusEnum> STATUS_MAP = Stream.of(values()).collect(Collectors.toMap(CarStatusEnum::toString, Function.identity()));
+    private static final Map<String, StatusEnum> STATUS_MAP = Stream.of(values()).collect(Collectors.toMap(StatusEnum::toString, Function.identity()));
 
     /**
      * Get status value of the enum type
@@ -38,9 +36,9 @@ public enum CarStatusEnum {
      * @param value - A string value which need to be converted into enum type
      * @return - StatusEnum object based on the given value.
      */
-    public static CarStatusEnum toValue(String value) {
+    public static StatusEnum toValue(String value) {
         if (value != null) {
-            for (CarStatusEnum statusEnum : CarStatusEnum.values()) {
+            for (StatusEnum statusEnum : StatusEnum.values()) {
                 if (statusEnum.getStatus().equalsIgnoreCase(value)) {
                     return statusEnum;
                 }
@@ -55,8 +53,8 @@ public enum CarStatusEnum {
      * @param name - enum name
      * @return - StatusEnum object based on the given name.
      */
-    public static CarStatusEnum lookupByName(String name) {
-        CarStatusEnum statusEnum = STATUS_MAP.get(name);
+    public static StatusEnum lookupByName(String name) {
+        StatusEnum statusEnum = STATUS_MAP.get(name);
         return Optional.ofNullable(statusEnum).orElseThrow(() -> new CustomException(String.format("'%s' has no corresponding value. Accepted values: %s", name, Arrays.asList(values()))));
     }
 }
