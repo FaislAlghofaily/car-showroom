@@ -3,7 +3,7 @@ package com.example.car_showroom.dto.showroom;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class GeneralShowroomDTO {
+public class CreateNewShowroomRequestDTO {
     @NotBlank
     @Size(min = 1, max = 25)
     private String name;
