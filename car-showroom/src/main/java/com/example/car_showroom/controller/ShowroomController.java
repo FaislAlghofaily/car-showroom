@@ -3,6 +3,7 @@ package com.example.car_showroom.controller;
 import com.example.car_showroom.constant.ApplicationConstants;
 import com.example.car_showroom.dto.GeneralResponseDTO;
 import com.example.car_showroom.dto.showroom.CreateNewShowroomRequestDTO;
+import com.example.car_showroom.dto.showroom.ShowroomFiltersDTO;
 import com.example.car_showroom.service.ShowroomService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -35,6 +36,12 @@ public class ShowroomController {
         return showroomService.createNewShowroom(acceptedLanguage, createNewShowroomRequestDTO);
     }
 
+//    @GetMapping
+//    public List<GeneralResponseDTO> getShowroomsWithFilters(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, required = false, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE) final String acceptedLanguage,
+//                                                            @RequestBody @Valid GeneralShowroomDTO generalShowroomDTO) {
+//        logger.info("Incoming request to fetch showrooms");
+//    }
+
     @GetMapping("/GetShowrooms")
     public ResponseEntity<Object> getItemsByRequestBody(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
                                                         @RequestParam(value = ApplicationConstants.PAGE_NUMBER, defaultValue = ApplicationConstants.DEFAULT_PAGE_NUMBER, required = false) final int pageNumber,
@@ -43,5 +50,11 @@ public class ShowroomController {
                                                         @RequestParam(value = ApplicationConstants.SORT_TYPE, defaultValue = ApplicationConstants.SORT_ASC, required = false) final String sortType,
                                                         @RequestParam(required = false) Map<String, String> filters) {
         return showroomService.getShowrooms(acceptedLanguage, filters, pageNumber, pageLimit, sortBy, sortType);
+    }
+
+    @GetMapping("/{crn}")
+    public ResponseEntity<ShowroomFiltersDTO> getShowroom(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
+                                                          @PathVariable String crn) {
+        return showroomService.getShowroomWithCRN(acceptedLanguage, crn);
     }
 }

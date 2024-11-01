@@ -7,6 +7,7 @@ import com.example.car_showroom.controller.ShowroomController;
 import com.example.car_showroom.dto.GeneralResponseDTO;
 import com.example.car_showroom.dto.ShowroomListResponseDTO;
 import com.example.car_showroom.dto.showroom.CreateNewShowroomRequestDTO;
+import com.example.car_showroom.dto.showroom.ShowroomFiltersDTO;
 import com.example.car_showroom.entity.Showroom;
 import com.example.car_showroom.enums.StatusEnum;
 import com.example.car_showroom.exception.CustomException;
@@ -58,6 +59,20 @@ public class ShowroomServiceImpl implements ShowroomService {
         }
         return pageableResponseConverter.getPageableResponse(response, showrooms, pageLimit, pageNumber);
 
+    }
+
+    @Override
+    public ResponseEntity<ShowroomFiltersDTO> getShowroomWithCRN(String acceptedLanguage, String crn) {
+        ShowroomFiltersDTO showroomFiltersDTO = new ShowroomFiltersDTO();
+        Showroom showroom = Optional.ofNullable(showroomRepository.findByCommercialRegistrationNumber(Long.valueOf(crn))).orElseThrow(() ->
+                new CustomException(ErrorMessageConstant.NO_SHOWROOM_FOUND));
+        showroomFiltersDTO.setCrn(crn);
+        showroomFiltersDTO.setName(showroom.getName());
+        showroomFiltersDTO.setAddress(showroom.getAddress());
+        showroomFiltersDTO.setManagerName(showroom.getManagerName());
+        showroomFiltersDTO.setContactNumber(String.valueOf(showroom.getContactNumber()));
+
+        return new ResponseEntity(showroomFiltersDTO, HttpStatus.OK);
     }
 
     private Showroom createAndSaveShowroom(CreateNewShowroomRequestDTO createNewShowroomRequestDTO) {

@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ShowroomRepository extends JpaRepository<Showroom, Integer>, JpaSpecificationExecutor<Showroom> {
     boolean existsByCommercialRegistrationNumber(Long commercialRegistrationNumber);
+    Showroom findByCommercialRegistrationNumber(Long commercialRegistrationNumber);
 
 }
