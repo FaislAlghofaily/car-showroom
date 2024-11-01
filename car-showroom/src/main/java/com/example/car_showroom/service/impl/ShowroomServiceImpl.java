@@ -10,12 +10,12 @@ import com.example.car_showroom.dto.showroom.CreateNewShowroomRequestDTO;
 import com.example.car_showroom.dto.showroom.ShowroomFiltersDTO;
 import com.example.car_showroom.dto.showroom.UpdateShowroomRequestDTO;
 import com.example.car_showroom.entity.Showroom;
-import com.example.car_showroom.enums.StatusEnum;
 import com.example.car_showroom.exception.CustomException;
 import com.example.car_showroom.repository.ShowroomRepository;
 import com.example.car_showroom.service.MessageService;
 import com.example.car_showroom.service.ShowroomService;
 import com.example.car_showroom.util.CommonUtils;
+import com.example.car_showroom.util.MessageHelper;
 import com.example.car_showroom.util.PageableResponseConverter;
 import jakarta.persistence.criteria.Predicate;
 import org.apache.commons.lang3.StringUtils;
@@ -43,12 +43,14 @@ public class ShowroomServiceImpl implements ShowroomService {
     private MessageService messageService;
     @Autowired
     private PageableResponseConverter pageableResponseConverter;
+    @Autowired
+    private MessageHelper messageHelper;
 
     @Override
     public ResponseEntity<GeneralResponseDTO> createNewShowroom(String acceptedLanguage, CreateNewShowroomRequestDTO createNewShowroomRequestDTO) {
         validateCreateShowroomRequest(acceptedLanguage, createNewShowroomRequestDTO);
         createAndSaveShowroom(createNewShowroomRequestDTO);
-        return new ResponseEntity<>(getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_SHOWROOM_SUCCESS), HttpStatus.OK);
+        return new ResponseEntity<>(messageHelper.getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_SHOWROOM_SUCCESS), HttpStatus.OK);
     }
 
     @Override
@@ -90,7 +92,7 @@ public class ShowroomServiceImpl implements ShowroomService {
             showroom.setAddress(updateShowroomRequestDTO.getAddress());
         }
         showroomRepository.save(showroom);
-        return new ResponseEntity<>(getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_SHOWROOM_SUCCESS), HttpStatus.OK);
+        return new ResponseEntity<>(messageHelper.getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_SHOWROOM_SUCCESS), HttpStatus.OK);
     }
 
     @Override
@@ -106,7 +108,7 @@ public class ShowroomServiceImpl implements ShowroomService {
         Showroom showroom = showroomRepository.findByCommercialRegistrationNumberAndStatus(Long.valueOf(crn), ApplicationConstants.ACTIVE);
         showroom.setStatus(ApplicationConstants.INACTIVE);
         showroomRepository.save(showroom);
-        return new ResponseEntity<>(getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_SHOWROOM_SUCCESS), HttpStatus.OK);
+        return new ResponseEntity<>(messageHelper.getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_SHOWROOM_SUCCESS), HttpStatus.OK);
     }
 
     private Showroom createAndSaveShowroom(CreateNewShowroomRequestDTO createNewShowroomRequestDTO) {
@@ -123,7 +125,7 @@ public class ShowroomServiceImpl implements ShowroomService {
 
     private void validateCreateShowroomRequest(String acceptedLanguage, CreateNewShowroomRequestDTO createNewShowroomRequestDTO) {
         if (!createNewShowroomRequestDTO.getCrn().matches(ApplicationConstants.EXACTLY_10_DIGITS_REGEX)) {
-            logger.error("Invalid Contact Number" + createNewShowroomRequestDTO.getContactNumber());
+            logger.error("Invalid Contact Number" + createNewShowroomRequestDTO.getCrn());
             throw new CustomException(acceptedLanguage, ErrorMessageConstant.DUPLICATE_SHOWROOM_ERROR);
         }
         if (showroomRepository.existsByCommercialRegistrationNumber(Long.valueOf(createNewShowroomRequestDTO.getCrn()))) {
@@ -136,12 +138,6 @@ public class ShowroomServiceImpl implements ShowroomService {
         }
     }
 
-    private GeneralResponseDTO getSuccessResponse(String language, String message) {
-        GeneralResponseDTO generalResponseDTO = new GeneralResponseDTO();
-        generalResponseDTO.setMessage(messageService.getMessage(language, message));
-        generalResponseDTO.setStatus(StatusEnum.SUCCESS.getStatus());
-        return generalResponseDTO;
-    }
 
     private Page<Showroom> getItemsWithFilters(PageRequest pageRequest, Map<String, String> requestParams, String sortBy, String sortType) {
         return showroomRepository.findAll((Specification<Showroom>) (root, query, criteriaBuilder) -> {
