@@ -1,6 +1,8 @@
 package com.example.car_showroom.service.impl;
 
 import com.example.car_showroom.constant.ApplicationConstants;
+import com.example.car_showroom.constant.ErrorMessageConstant;
+import com.example.car_showroom.constant.MessageConstant;
 import com.example.car_showroom.dto.GeneralResponseDTO;
 import com.example.car_showroom.dto.car.CarListResponseDTO;
 import com.example.car_showroom.dto.car.CreateCarRequestDTO;
@@ -59,9 +61,9 @@ public class CarServiceImpl implements CarService {
     @Override
     public ResponseEntity<GeneralResponseDTO> createNewCarInShowroom(String acceptedLanguage, String crn, CreateCarRequestDTO createCarRequestDTO) {
         Showroom showroom = Optional.ofNullable(showroomRepository.findByCommercialRegistrationNumberAndStatus(Long.valueOf(crn), ApplicationConstants.ACTIVE)).orElseThrow(() ->
-                new CustomException(acceptedLanguage, "Showroom not found"));
+                new CustomException(acceptedLanguage, ErrorMessageConstant.NO_SHOWROOM_FOUND));
         createAndSaveNewCar(createCarRequestDTO, showroom);
-        return new ResponseEntity<>(messageHelper.getSuccessResponse(acceptedLanguage, "message"), HttpStatus.OK);
+        return new ResponseEntity<>(messageHelper.getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_CAR_SUCCESS), HttpStatus.OK);
     }
 
     /**
@@ -143,9 +145,9 @@ public class CarServiceImpl implements CarService {
             query.distinct(true);
             if (StringUtils.isBlank(sortBy)) {
                 if (sortType.equalsIgnoreCase(ApplicationConstants.SORT_ASC)) {
-                    query.orderBy(criteriaBuilder.asc(root.get("createdDate")));
+                    query.orderBy(criteriaBuilder.asc(root.get(ApplicationConstants.CREATED_DATE)));
                 } else {
-                    query.orderBy(criteriaBuilder.desc(root.get("createdDate")));
+                    query.orderBy(criteriaBuilder.desc(root.get(ApplicationConstants.CREATED_DATE)));
                 }
             } else {
                 if (sortType.equalsIgnoreCase(ApplicationConstants.SORT_ASC)) {

@@ -24,6 +24,7 @@ public class ApplicationConstants {
     public static final String PAGE_LIMIT = "pageLimit";
     public static final String DEFAULT_PAGE_NUMBER = "1";
     public static final String DEFAULT_PAGE_LIMIT = "10";
+    public static final String CREATED_DATE = "createdDate";
 
 
 

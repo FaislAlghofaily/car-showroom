@@ -93,7 +93,7 @@ public class ShowroomServiceImpl implements ShowroomService {
     public ResponseEntity<ShowroomFiltersDTO> getShowroomWithCRN(String acceptedLanguage, String crn) {
         ShowroomFiltersDTO showroomFiltersDTO = new ShowroomFiltersDTO();
         Showroom showroom = Optional.ofNullable(showroomRepository.findByCommercialRegistrationNumberAndStatus(Long.valueOf(crn), ApplicationConstants.ACTIVE)).orElseThrow(() ->
-                new CustomException(ErrorMessageConstant.NO_SHOWROOM_FOUND));
+                new CustomException(acceptedLanguage, ErrorMessageConstant.NO_SHOWROOM_FOUND));
         showroomFiltersDTO.setCrn(crn);
         showroomFiltersDTO.setName(showroom.getName());
         showroomFiltersDTO.setAddress(showroom.getAddress());
@@ -125,7 +125,7 @@ public class ShowroomServiceImpl implements ShowroomService {
             showroom.setAddress(updateShowroomRequestDTO.getAddress());
         }
         showroomRepository.save(showroom);
-        return new ResponseEntity<>(messageHelper.getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_SHOWROOM_SUCCESS), HttpStatus.OK);
+        return new ResponseEntity<>(messageHelper.getSuccessResponse(acceptedLanguage, MessageConstant.UPDATE_SHOWROOM_SUCCESS), HttpStatus.OK);
     }
 
     /**
@@ -137,17 +137,17 @@ public class ShowroomServiceImpl implements ShowroomService {
     @Override
     public ResponseEntity<GeneralResponseDTO> inactivateShowroom(String acceptedLanguage, String crn) {
         if (!crn.matches(ApplicationConstants.EXACTLY_10_DIGITS_REGEX)) {
-            logger.error("Invalid Contact Number" + crn);
-            throw new CustomException(acceptedLanguage, ErrorMessageConstant.DUPLICATE_SHOWROOM_ERROR);
+            logger.error("Invalid CRN" + crn);
+            throw new CustomException(acceptedLanguage, ErrorMessageConstant.INVALID_CRN);
         }
         if (!showroomRepository.existsByCommercialRegistrationNumber(Long.valueOf(crn))) {
             logger.error("Error while creating showroom duplicate CRN:" + crn);
-            throw new CustomException(acceptedLanguage, ErrorMessageConstant.DUPLICATE_SHOWROOM_ERROR);
+            throw new CustomException(acceptedLanguage, ErrorMessageConstant.NO_SHOWROOM_FOUND);
         }
         Showroom showroom = showroomRepository.findByCommercialRegistrationNumberAndStatus(Long.valueOf(crn), ApplicationConstants.ACTIVE);
         showroom.setStatus(ApplicationConstants.INACTIVE);
         showroomRepository.save(showroom);
-        return new ResponseEntity<>(messageHelper.getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_SHOWROOM_SUCCESS), HttpStatus.OK);
+        return new ResponseEntity<>(messageHelper.getSuccessResponse(acceptedLanguage, MessageConstant.INACTIVATE_SHOWROOM_SUCCESS), HttpStatus.OK);
     }
 
     private Showroom createAndSaveShowroom(CreateNewShowroomRequestDTO createNewShowroomRequestDTO) {
@@ -169,8 +169,8 @@ public class ShowroomServiceImpl implements ShowroomService {
      */
     private void validateCreateShowroomRequest(String acceptedLanguage, CreateNewShowroomRequestDTO createNewShowroomRequestDTO) {
         if (!createNewShowroomRequestDTO.getCrn().matches(ApplicationConstants.EXACTLY_10_DIGITS_REGEX)) {
-            logger.error("Invalid Contact Number" + createNewShowroomRequestDTO.getCrn());
-            throw new CustomException(acceptedLanguage, ErrorMessageConstant.DUPLICATE_SHOWROOM_ERROR);
+            logger.error("Invalid CRN" + createNewShowroomRequestDTO.getCrn());
+            throw new CustomException(acceptedLanguage, ErrorMessageConstant.INVALID_CRN);
         }
         if (showroomRepository.existsByCommercialRegistrationNumber(Long.valueOf(createNewShowroomRequestDTO.getCrn()))) {
             logger.error("Error while creating showroom duplicate CRN:" + createNewShowroomRequestDTO.getCrn());
@@ -178,7 +178,7 @@ public class ShowroomServiceImpl implements ShowroomService {
         }
         if (!StringUtils.isBlank(createNewShowroomRequestDTO.getContactNumber()) && !createNewShowroomRequestDTO.getContactNumber().matches(ApplicationConstants.MAX_15_DIGITS_REGEX)) {
             logger.error("Invalid Contact Number" + createNewShowroomRequestDTO.getContactNumber());
-            throw new CustomException(acceptedLanguage, ErrorMessageConstant.DUPLICATE_SHOWROOM_ERROR);
+            throw new CustomException(acceptedLanguage, ErrorMessageConstant.INVALID_CRN);
         }
     }
 
@@ -208,9 +208,9 @@ public class ShowroomServiceImpl implements ShowroomService {
             query.multiselect(root.get(ApplicationConstants.FILTER_NAME), root.get(ApplicationConstants.FILTER_CRN), root.get(ApplicationConstants.FILTER_CONTACT_NUMBER));
             if (StringUtils.isBlank(sortBy)) {
                 if (sortType.equalsIgnoreCase(ApplicationConstants.SORT_ASC)) {
-                    query.orderBy(criteriaBuilder.asc(root.get("createdDate")));
+                    query.orderBy(criteriaBuilder.asc(root.get(ApplicationConstants.CREATED_DATE)));
                 } else {
-                    query.orderBy(criteriaBuilder.desc(root.get("createdDate")));
+                    query.orderBy(criteriaBuilder.desc(root.get(ApplicationConstants.CREATED_DATE)));
                 }
             } else {
                 if (sortType.equalsIgnoreCase(ApplicationConstants.SORT_ASC)) {
@@ -235,8 +235,8 @@ public class ShowroomServiceImpl implements ShowroomService {
 
     private void validateUpdateRequest(String acceptedLanguage, UpdateShowroomRequestDTO updateShowroomRequestDTO, String crn) {
         if (!crn.matches(ApplicationConstants.EXACTLY_10_DIGITS_REGEX)) {
-            logger.error("Invalid Contact Number" + crn);
-            throw new CustomException(acceptedLanguage, ErrorMessageConstant.DUPLICATE_SHOWROOM_ERROR);
+            logger.error("Invalid CRN" + crn);
+            throw new CustomException(acceptedLanguage, ErrorMessageConstant.INVALID_CRN);
         }
         if (!showroomRepository.existsByCommercialRegistrationNumber(Long.valueOf(crn))) {
             logger.error("Error while creating showroom duplicate CRN:" + crn);
@@ -244,7 +244,7 @@ public class ShowroomServiceImpl implements ShowroomService {
         }
         if (!StringUtils.isBlank(updateShowroomRequestDTO.getContactNumber()) && !updateShowroomRequestDTO.getContactNumber().matches(ApplicationConstants.MAX_15_DIGITS_REGEX)) {
             logger.error("Invalid Contact Number" + updateShowroomRequestDTO.getContactNumber());
-            throw new CustomException(acceptedLanguage, ErrorMessageConstant.DUPLICATE_SHOWROOM_ERROR);
+            throw new CustomException(acceptedLanguage, ErrorMessageConstant.INVALID_CONTACT_NUMBER);
         }
     }
 

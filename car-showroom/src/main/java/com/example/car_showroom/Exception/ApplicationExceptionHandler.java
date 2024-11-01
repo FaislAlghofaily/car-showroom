@@ -22,6 +22,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * this class is responsible in catching Exceptions and generating a proper response
+ */
 @ControllerAdvice
 public class ApplicationExceptionHandler {
 
