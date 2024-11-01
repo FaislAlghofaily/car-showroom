@@ -42,6 +42,9 @@ public class Showroom {
     @Column(name = "address")
     @Size(min = 1, max = 255)
     private String address;
+    @NotNull
+    @Column(name = "status")
+    private String status;
 
     @CreationTimestamp
     @Column(name = "created_date")
@@ -113,5 +116,13 @@ public class Showroom {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

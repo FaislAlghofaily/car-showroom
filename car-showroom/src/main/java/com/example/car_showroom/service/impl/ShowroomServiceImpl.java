@@ -5,9 +5,10 @@ import com.example.car_showroom.constant.ErrorMessageConstant;
 import com.example.car_showroom.constant.MessageConstant;
 import com.example.car_showroom.controller.ShowroomController;
 import com.example.car_showroom.dto.GeneralResponseDTO;
-import com.example.car_showroom.dto.ShowroomListResponseDTO;
+import com.example.car_showroom.dto.showroom.ShowroomListResponseDTO;
 import com.example.car_showroom.dto.showroom.CreateNewShowroomRequestDTO;
 import com.example.car_showroom.dto.showroom.ShowroomFiltersDTO;
+import com.example.car_showroom.dto.showroom.UpdateShowroomRequestDTO;
 import com.example.car_showroom.entity.Showroom;
 import com.example.car_showroom.enums.StatusEnum;
 import com.example.car_showroom.exception.CustomException;
@@ -64,7 +65,7 @@ public class ShowroomServiceImpl implements ShowroomService {
     @Override
     public ResponseEntity<ShowroomFiltersDTO> getShowroomWithCRN(String acceptedLanguage, String crn) {
         ShowroomFiltersDTO showroomFiltersDTO = new ShowroomFiltersDTO();
-        Showroom showroom = Optional.ofNullable(showroomRepository.findByCommercialRegistrationNumber(Long.valueOf(crn))).orElseThrow(() ->
+        Showroom showroom = Optional.ofNullable(showroomRepository.findByCommercialRegistrationNumberAndStatus(Long.valueOf(crn), ApplicationConstants.ACTIVE)).orElseThrow(() ->
                 new CustomException(ErrorMessageConstant.NO_SHOWROOM_FOUND));
         showroomFiltersDTO.setCrn(crn);
         showroomFiltersDTO.setName(showroom.getName());
@@ -73,6 +74,23 @@ public class ShowroomServiceImpl implements ShowroomService {
         showroomFiltersDTO.setContactNumber(String.valueOf(showroom.getContactNumber()));
 
         return new ResponseEntity(showroomFiltersDTO, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<GeneralResponseDTO> updateShowroom(String acceptedLanguage, String crn, UpdateShowroomRequestDTO updateShowroomRequestDTO) {
+        validateUpdateRequest(acceptedLanguage, updateShowroomRequestDTO, crn);
+        Showroom showroom = showroomRepository.findByCommercialRegistrationNumberAndStatus(Long.valueOf(crn), ApplicationConstants.ACTIVE);
+        if (!StringUtils.isBlank(updateShowroomRequestDTO.getContactNumber())) {
+            showroom.setContactNumber(Long.valueOf(updateShowroomRequestDTO.getContactNumber()));
+        }
+        if (!StringUtils.isBlank(updateShowroomRequestDTO.getManagerName())) {
+            showroom.setManagerName(updateShowroomRequestDTO.getManagerName());
+        }
+        if (!StringUtils.isBlank(updateShowroomRequestDTO.getAddress())) {
+            showroom.setAddress(updateShowroomRequestDTO.getAddress());
+        }
+        showroomRepository.save(showroom);
+        return new ResponseEntity<>(getUpdateShowroomResponse(acceptedLanguage), HttpStatus.OK);
     }
 
     private Showroom createAndSaveShowroom(CreateNewShowroomRequestDTO createNewShowroomRequestDTO) {
@@ -121,6 +139,7 @@ public class ShowroomServiceImpl implements ShowroomService {
             if (StringUtils.isNotBlank(requestParams.get(ApplicationConstants.FILTER_CONTACT_NUMBER))) {
                 predicates.add(criteriaBuilder.like(root.get(ApplicationConstants.FILTER_CONTACT_NUMBER).as(String.class), ApplicationConstants.STRING_PERCENTAGE + requestParams.get(ApplicationConstants.FILTER_CONTACT_NUMBER) + ApplicationConstants.STRING_PERCENTAGE));
             }
+            predicates.add(criteriaBuilder.equal(root.get(ApplicationConstants.ACTIVE), ApplicationConstants.ACTIVE));
 
             query.distinct(true);
             query.multiselect(root.get(ApplicationConstants.FILTER_NAME), root.get(ApplicationConstants.FILTER_CRN), root.get(ApplicationConstants.FILTER_CONTACT_NUMBER));
@@ -149,5 +168,27 @@ public class ShowroomServiceImpl implements ShowroomService {
             showroomsListDTO.add(itemFilterDTO);
         });
         return showroomsListDTO;
+    }
+
+    private void validateUpdateRequest(String acceptedLanguage, UpdateShowroomRequestDTO updateShowroomRequestDTO, String crn) {
+        if (!crn.matches(ApplicationConstants.EXACTLY_10_DIGITS_REGEX)) {
+            logger.error("Invalid Contact Number" + crn);
+            throw new CustomException(acceptedLanguage, ErrorMessageConstant.DUPLICATE_SHOWROOM_ERROR);
+        }
+        if (!showroomRepository.existsByCommercialRegistrationNumber(Long.valueOf(crn))) {
+            logger.error("Error while creating showroom duplicate CRN:" + crn);
+            throw new CustomException(acceptedLanguage, ErrorMessageConstant.DUPLICATE_SHOWROOM_ERROR);
+        }
+        if (!StringUtils.isBlank(updateShowroomRequestDTO.getContactNumber()) && !updateShowroomRequestDTO.getContactNumber().matches(ApplicationConstants.MAX_15_DIGITS_REGEX)) {
+            logger.error("Invalid Contact Number" + updateShowroomRequestDTO.getContactNumber());
+            throw new CustomException(acceptedLanguage, ErrorMessageConstant.DUPLICATE_SHOWROOM_ERROR);
+        }
+    }
+
+    private GeneralResponseDTO getUpdateShowroomResponse(String language) {
+        GeneralResponseDTO generalResponseDTO = new GeneralResponseDTO();
+        generalResponseDTO.setMessage(messageService.getMessage(language, MessageConstant.CREATE_SHOWROOM_SUCCESS));
+        generalResponseDTO.setStatus(StatusEnum.SUCCESS.getStatus());
+        return generalResponseDTO;
     }
 }

@@ -4,6 +4,7 @@ import com.example.car_showroom.constant.ApplicationConstants;
 import com.example.car_showroom.dto.GeneralResponseDTO;
 import com.example.car_showroom.dto.showroom.CreateNewShowroomRequestDTO;
 import com.example.car_showroom.dto.showroom.ShowroomFiltersDTO;
+import com.example.car_showroom.dto.showroom.UpdateShowroomRequestDTO;
 import com.example.car_showroom.service.ShowroomService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -56,5 +57,12 @@ public class ShowroomController {
     public ResponseEntity<ShowroomFiltersDTO> getShowroom(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
                                                           @PathVariable String crn) {
         return showroomService.getShowroomWithCRN(acceptedLanguage, crn);
+    }
+
+    @PutMapping("/{crn}")
+    public ResponseEntity<GeneralResponseDTO> updateShowroom(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
+                                                             @PathVariable String crn,
+                                                             @RequestBody(required = false) UpdateShowroomRequestDTO updateShowroomRequestDTO) {
+        return showroomService.updateShowroom(acceptedLanguage, crn, updateShowroomRequestDTO);
     }
 }

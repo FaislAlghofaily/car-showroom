@@ -1,4 +1,4 @@
-package com.example.car_showroom.dto;
+package com.example.car_showroom.dto.showroom;
 
 public class ShowroomListResponseDTO {
     private String name;
