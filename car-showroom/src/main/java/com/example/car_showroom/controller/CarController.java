@@ -21,13 +21,33 @@ public class CarController {
     @Autowired
     private CarService carService;
 
+    /**
+     * this api is responsible for creating a new car in a specific showroom
+     *
+     * @param acceptedLanguage
+     * @param crn
+     * @param createCarRequestDTO
+     * @return
+     */
     @PostMapping("/{crn}")
     public ResponseEntity<GeneralResponseDTO> getShowroom(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
                                                           @PathVariable String crn,
                                                           @RequestBody @Valid CreateCarRequestDTO createCarRequestDTO) {
+        logger.info("new request to add car for showroom :" + crn);
         return carService.createNewCarInShowroom(acceptedLanguage, crn, createCarRequestDTO);
     }
 
+    /**
+     * this api is responsible for retrieving cars based on dynamic input filters
+     *
+     * @param acceptedLanguage
+     * @param pageNumber
+     * @param pageLimit
+     * @param sortBy
+     * @param sortType
+     * @param filters
+     * @return
+     */
     @GetMapping("/GetCars")
     public ResponseEntity<Object> getItemsByRequestBody(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
                                                         @RequestParam(value = ApplicationConstants.PAGE_NUMBER, defaultValue = ApplicationConstants.DEFAULT_PAGE_NUMBER, required = false) final int pageNumber,

@@ -49,7 +49,13 @@ public class CarServiceImpl implements CarService {
     @Autowired
     private PageableResponseConverter pageableResponseConverter;
 
-
+    /**
+     * this method is responsible for creating new car
+     * @param acceptedLanguage
+     * @param crn
+     * @param createCarRequestDTO
+     * @return
+     */
     @Override
     public ResponseEntity<GeneralResponseDTO> createNewCarInShowroom(String acceptedLanguage, String crn, CreateCarRequestDTO createCarRequestDTO) {
         Showroom showroom = Optional.ofNullable(showroomRepository.findByCommercialRegistrationNumberAndStatus(Long.valueOf(crn), ApplicationConstants.ACTIVE)).orElseThrow(() ->
@@ -58,6 +64,16 @@ public class CarServiceImpl implements CarService {
         return new ResponseEntity<>(messageHelper.getSuccessResponse(acceptedLanguage, "message"), HttpStatus.OK);
     }
 
+    /**
+     * this method is responsible for getting cars with dynamic filters and sorting
+     * @param acceptedLanguage
+     * @param requestParams
+     * @param pageNumber
+     * @param pageLimit
+     * @param sortBy
+     * @param sortType
+     * @return
+     */
     @Override
     public ResponseEntity<Object> getCarsWithFilters(String acceptedLanguage, Map<String, String> requestParams, int pageNumber, int pageLimit, String sortBy, String sortType) {
         Page<Car> cars = getCarsListWithFilters(PageRequest.of((pageNumber - 1), pageLimit), requestParams, sortBy, sortType);
@@ -68,6 +84,13 @@ public class CarServiceImpl implements CarService {
         return pageableResponseConverter.getPageableResponse(response, cars, pageLimit, pageNumber);
     }
 
+    /**
+     * this method for creating and saving a new car
+     * @param createCarRequestDTO
+     * @param showroom
+     * @return
+     */
+
     private Car createAndSaveNewCar(CreateCarRequestDTO createCarRequestDTO, Showroom showroom) {
         Car car = new Car();
         BeanUtils.copyProperties(createCarRequestDTO, car);
@@ -76,6 +99,15 @@ public class CarServiceImpl implements CarService {
         return carRepository.save(car);
     }
 
+    /**
+     * this method uses criteriaBuilder to build a query that will fetch data based on requested filters
+     * then will sort based on sortBy param
+     * @param pageRequest
+     * @param requestParams
+     * @param sortBy
+     * @param sortType
+     * @return
+     */
     private Page<Car> getCarsListWithFilters(PageRequest pageRequest, Map<String, String> requestParams, String sortBy, String sortType) {
 
         return carRepository.findAll((Specification<Car>) (root, query, criteriaBuilder) -> {

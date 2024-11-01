@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * this class to allow message dynamic message reading from classpath:msg/messages
+ */
 @Configuration
 public class MessageConfig implements WebMvcConfigurer {
     @Bean("customMessageSource")

@@ -1,5 +1,8 @@
 package com.example.car_showroom.constant;
 
+/**
+ * this class for error messages that refers to "classpath:msg/messages"
+ */
 public class ErrorMessageConstant {
     public static final String ERROR_CONTACT_ADMINISTRATOR = "error.contact.administrator";
     public static final String SQL_ERROR_CONTACT_ADMINISTRATOR = "sql.error.contact.administrator";

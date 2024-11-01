@@ -46,6 +46,13 @@ public class ShowroomServiceImpl implements ShowroomService {
     @Autowired
     private MessageHelper messageHelper;
 
+    /**
+     * this method is responsible for creating a new showroom
+     *
+     * @param acceptedLanguage
+     * @param createNewShowroomRequestDTO
+     * @return
+     */
     @Override
     public ResponseEntity<GeneralResponseDTO> createNewShowroom(String acceptedLanguage, CreateNewShowroomRequestDTO createNewShowroomRequestDTO) {
         validateCreateShowroomRequest(acceptedLanguage, createNewShowroomRequestDTO);
@@ -53,6 +60,17 @@ public class ShowroomServiceImpl implements ShowroomService {
         return new ResponseEntity<>(messageHelper.getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_SHOWROOM_SUCCESS), HttpStatus.OK);
     }
 
+    /**
+     * this method is responsible for getting showrooms based on filters and sort based on sortBy param
+     *
+     * @param acceptedLanguage
+     * @param requestParams
+     * @param pageNumber
+     * @param pageLimit
+     * @param sortBy
+     * @param sortType
+     * @return
+     */
     @Override
     public ResponseEntity<Object> getShowrooms(String acceptedLanguage, Map<String, String> requestParams, int pageNumber, int pageLimit, String sortBy, String sortType) {
         Page<Showroom> showrooms = getShowroomsWithFilters(PageRequest.of((pageNumber - 1), pageLimit), requestParams, sortBy, sortType);
@@ -64,6 +82,13 @@ public class ShowroomServiceImpl implements ShowroomService {
 
     }
 
+    /**
+     * this method is responsible for getting a showroom based on CRN
+     *
+     * @param acceptedLanguage
+     * @param crn
+     * @return
+     */
     @Override
     public ResponseEntity<ShowroomFiltersDTO> getShowroomWithCRN(String acceptedLanguage, String crn) {
         ShowroomFiltersDTO showroomFiltersDTO = new ShowroomFiltersDTO();
@@ -78,6 +103,14 @@ public class ShowroomServiceImpl implements ShowroomService {
         return new ResponseEntity(showroomFiltersDTO, HttpStatus.OK);
     }
 
+    /**
+     * this method is responsible for updating showroom's address, contactNumber, managerName
+     *
+     * @param acceptedLanguage
+     * @param crn
+     * @param updateShowroomRequestDTO
+     * @return
+     */
     @Override
     public ResponseEntity<GeneralResponseDTO> updateShowroom(String acceptedLanguage, String crn, UpdateShowroomRequestDTO updateShowroomRequestDTO) {
         validateUpdateRequest(acceptedLanguage, updateShowroomRequestDTO, crn);
@@ -95,6 +128,12 @@ public class ShowroomServiceImpl implements ShowroomService {
         return new ResponseEntity<>(messageHelper.getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_SHOWROOM_SUCCESS), HttpStatus.OK);
     }
 
+    /**
+     * this method is responsible for inactivating showroom
+     * @param acceptedLanguage
+     * @param crn
+     * @return
+     */
     @Override
     public ResponseEntity<GeneralResponseDTO> inactivateShowroom(String acceptedLanguage, String crn) {
         if (!crn.matches(ApplicationConstants.EXACTLY_10_DIGITS_REGEX)) {
@@ -123,6 +162,11 @@ public class ShowroomServiceImpl implements ShowroomService {
         return showroomRepository.save(showroom);
     }
 
+    /**
+     * this method is responsible for validating createNewShowroomRequestDTO
+     * @param acceptedLanguage
+     * @param createNewShowroomRequestDTO
+     */
     private void validateCreateShowroomRequest(String acceptedLanguage, CreateNewShowroomRequestDTO createNewShowroomRequestDTO) {
         if (!createNewShowroomRequestDTO.getCrn().matches(ApplicationConstants.EXACTLY_10_DIGITS_REGEX)) {
             logger.error("Invalid Contact Number" + createNewShowroomRequestDTO.getCrn());
@@ -138,7 +182,14 @@ public class ShowroomServiceImpl implements ShowroomService {
         }
     }
 
-
+    /**
+     * this method is responsible for fetching showrooms using dynamic filters then sort them based on sortBy param
+     * @param pageRequest
+     * @param requestParams
+     * @param sortBy
+     * @param sortType
+     * @return
+     */
     private Page<Showroom> getShowroomsWithFilters(PageRequest pageRequest, Map<String, String> requestParams, String sortBy, String sortType) {
         return showroomRepository.findAll((Specification<Showroom>) (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();

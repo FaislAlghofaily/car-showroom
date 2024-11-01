@@ -26,6 +26,13 @@ public class MessageServiceImpl implements MessageService {
         return getMessage(language, messageKey, null);
     }
 
+    /**
+     * this method is responsible for reading messages from resource file based on language
+     * @param language
+     * @param messageKey
+     * @param data
+     * @return
+     */
     @Override
     public String getMessage(String language, String messageKey, Object[] data) {
         language = language == null ? ApplicationConstants.ARABIC : language;

@@ -29,14 +29,14 @@ public class PageableResponseConverter {
     public ResponseEntity<Object> getPageableResponse(Object responseObject, Page page, int pageLimit, int pageNumber) {
         ResponseEntity<Object> response;
         if (responseObject != null) {
-            PageableDTO pageableItemDTO = new PageableDTO();
+            PageableDTO pageableDTO = new PageableDTO();
             // Adding content
-            pageableItemDTO.setContent(responseObject);
+            pageableDTO.setContent(responseObject);
             //Adding default pageable options into pageable DTO
             if(page != null) {
-                getDefaultPageableOptions(page, pageableItemDTO);
+                getDefaultPageableOptions(page, pageableDTO);
             }
-            response = new ResponseEntity<>(pageableItemDTO, HttpStatus.OK);
+            response = new ResponseEntity<>(pageableDTO, HttpStatus.OK);
         } else {
             Map<String, Object> pageMap = new HashMap<>();
             pageMap.put(LIMIT, pageLimit);

@@ -37,6 +37,16 @@ public class ShowroomController {
         return showroomService.createNewShowroom(acceptedLanguage, createNewShowroomRequestDTO);
     }
 
+    /**
+     * this api is responsible for getting showrooms with dynamic filters
+     * @param acceptedLanguage
+     * @param pageNumber
+     * @param pageLimit
+     * @param sortBy
+     * @param sortType
+     * @param filters
+     * @return
+     */
     @GetMapping("/GetShowrooms")
     public ResponseEntity<Object> getItemsByRequestBody(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
                                                         @RequestParam(value = ApplicationConstants.PAGE_NUMBER, defaultValue = ApplicationConstants.DEFAULT_PAGE_NUMBER, required = false) final int pageNumber,
@@ -47,18 +57,38 @@ public class ShowroomController {
         return showroomService.getShowrooms(acceptedLanguage, filters, pageNumber, pageLimit, sortBy, sortType);
     }
 
+    /**
+     * this api is responsible for fetching a showroom using CRN
+     * @param acceptedLanguage
+     * @param crn
+     * @return
+     */
     @GetMapping("/{crn}")
     public ResponseEntity<ShowroomFiltersDTO> getShowroom(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
                                                           @PathVariable String crn) {
         return showroomService.getShowroomWithCRN(acceptedLanguage, crn);
     }
 
+    /**
+     * this api is responsible for updating showroom's address, contactNumber, managerName
+     * @param acceptedLanguage
+     * @param crn
+     * @param updateShowroomRequestDTO
+     * @return
+     */
     @PutMapping("/{crn}")
     public ResponseEntity<GeneralResponseDTO> updateShowroom(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
                                                              @PathVariable String crn,
                                                              @RequestBody(required = false) UpdateShowroomRequestDTO updateShowroomRequestDTO) {
         return showroomService.updateShowroom(acceptedLanguage, crn, updateShowroomRequestDTO);
     }
+
+    /**
+     * this api is responsible for inactivating showroom
+     * @param acceptedLanguage
+     * @param crn
+     * @return
+     */
     @PutMapping("/inactivateShowroom/{crn}")
     public ResponseEntity<GeneralResponseDTO> updateShowroom(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
                                                              @PathVariable String crn) {
