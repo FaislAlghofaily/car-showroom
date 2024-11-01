@@ -1,22 +1,19 @@
 package com.example.car_showroom.dto.showroom;
 
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class GeneralShowroomDTO {
     @NotBlank
     @Size(min = 1, max = 25)
     private String name;
-    @NotNull
-    @Digits(integer = 10, fraction = 0)
-    private Integer crn;
+    @Size(min = 10, max = 10)
+    @NotBlank
+    private String crn;
     @Size(min = 1, max = 300)
     private String managerName;
-    @Digits(integer = 15, fraction = 0)
-    @NotNull
-    private Integer contactNumber;
+    @Size(min = 1, max = 15)
+    private String contactNumber;
     @Size(min = 1, max = 300)
     private String address;
 
@@ -28,11 +25,11 @@ public class GeneralShowroomDTO {
         this.name = name;
     }
 
-    public Integer getCrn() {
+    public String getCrn() {
         return crn;
     }
 
-    public void setCrn(Integer crn) {
+    public void setCrn(String crn) {
         this.crn = crn;
     }
 
@@ -44,11 +41,11 @@ public class GeneralShowroomDTO {
         this.managerName = managerName;
     }
 
-    public Integer getContactNumber() {
+    public String getContactNumber() {
         return contactNumber;
     }
 
-    public void setContactNumber(Integer contactNumber) {
+    public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
     }
 

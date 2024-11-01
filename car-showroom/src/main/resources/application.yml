@@ -22,15 +22,14 @@ spring:
     hibernate:
       hbm2ddl:
         auto: validate
+  jdbc:
+    time_zone: UTC
 #  flyway:
 #    enabled: true
 #    baseline-on-migrate: true
 #    locations:
 #      - classpath:migration
     encoding: UTF-8
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
   jackson:
     default-property-inclusion: non_null
 

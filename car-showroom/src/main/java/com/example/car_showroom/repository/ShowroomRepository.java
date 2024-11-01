@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ShowroomRepository extends JpaRepository<Showroom, Integer> {
-    boolean existsByCommercialRegistrationNumber(Integer commercialRegistrationNumber);
+    boolean existsByCommercialRegistrationNumber(Long commercialRegistrationNumber);
 
 }

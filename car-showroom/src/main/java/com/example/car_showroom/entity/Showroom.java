@@ -31,14 +31,14 @@ public class Showroom {
     @NotNull
     @Column(name = "commercial_registration_number")
     @Digits(integer = 10, fraction = 0)
-    private Integer commercialRegistrationNumber;
+    private Long commercialRegistrationNumber;
     @Column(name = "manager_name")
     @Size(min = 1, max = 100)
     private String managerName;
     @NotNull
     @Column(name = "contact_number")
     @Digits(integer = 15, fraction = 0)
-    private Integer contactNumber;
+    private Long contactNumber;
     @Column(name = "address")
     @Size(min = 1, max = 255)
     private String address;
@@ -67,11 +67,11 @@ public class Showroom {
         this.name = name;
     }
 
-    public Integer getCommercialRegistrationNumber() {
+    public Long getCommercialRegistrationNumber() {
         return commercialRegistrationNumber;
     }
 
-    public void setCommercialRegistrationNumber(Integer commercialRegistrationNumber) {
+    public void setCommercialRegistrationNumber(Long commercialRegistrationNumber) {
         this.commercialRegistrationNumber = commercialRegistrationNumber;
     }
 
@@ -83,11 +83,11 @@ public class Showroom {
         this.managerName = managerName;
     }
 
-    public Integer getContactNumber() {
+    public Long getContactNumber() {
         return contactNumber;
     }
 
-    public void setContactNumber(Integer contactNumber) {
+    public void setContactNumber(Long contactNumber) {
         this.contactNumber = contactNumber;
     }
 

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,8 +27,8 @@ public class ShowroomController {
      * @return
      */
     @PostMapping("/create")
-    public GeneralResponseDTO createNewShowroom(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, required = false, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE) final String acceptedLanguage,
-                                                @RequestBody @Valid GeneralShowroomDTO generalShowroomDTO) {
+    public ResponseEntity<GeneralResponseDTO> createNewShowroom(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, required = false, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE) final String acceptedLanguage,
+                                                                @RequestBody @Valid GeneralShowroomDTO generalShowroomDTO) {
         logger.info("Incoming request to create new showroom with CRN: " + generalShowroomDTO.getCrn());
         return showroomService.createNewShowroom(acceptedLanguage, generalShowroomDTO);
     }
