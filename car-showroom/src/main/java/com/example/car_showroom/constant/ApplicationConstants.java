@@ -15,6 +15,7 @@ public class ApplicationConstants {
     public static final String MAX_15_DIGITS_REGEX = "^[0-9]{1,15}$";
     public static final String ACTIVE = "Active";
     public static final String INACTIVE = "Inactive";
+    public static final String STATUS = "status";
 
 
 
@@ -34,6 +35,11 @@ public class ApplicationConstants {
     public static final String FILTER_ADDRESS = "address";
     public static final String FILTER_MANAGER_NAME = "managerName";
     public static final String FILTER_CONTACT_NUMBER = "contactNumber";
+    public static final String FILTER_VIN = "vin";
+    public static final String FILTER_MODEL = "model";
+    public static final String FILTER_MODEL_YEAR = "modelYear";
+    public static final String FILTER_MAKER = "maker";
+    public static final String FILTER_PRICE = "price";
     public static final String STRING_PERCENTAGE = "%";
     public static final String SORT_BY = "sortBy";
     public static final String SORT_TYPE = "sortType";

@@ -55,7 +55,7 @@ public class ShowroomServiceImpl implements ShowroomService {
 
     @Override
     public ResponseEntity<Object> getShowrooms(String acceptedLanguage, Map<String, String> requestParams, int pageNumber, int pageLimit, String sortBy, String sortType) {
-        Page<Showroom> showrooms = getItemsWithFilters(PageRequest.of((pageNumber - 1), pageLimit), requestParams, sortBy, sortType);
+        Page<Showroom> showrooms = getShowroomsWithFilters(PageRequest.of((pageNumber - 1), pageLimit), requestParams, sortBy, sortType);
         Object response = null;
         if (Optional.ofNullable(showrooms).isPresent() && !CollectionUtils.isEmpty(showrooms.getContent())) {
             response = getShowroomResponse(showrooms.getContent());
@@ -139,7 +139,7 @@ public class ShowroomServiceImpl implements ShowroomService {
     }
 
 
-    private Page<Showroom> getItemsWithFilters(PageRequest pageRequest, Map<String, String> requestParams, String sortBy, String sortType) {
+    private Page<Showroom> getShowroomsWithFilters(PageRequest pageRequest, Map<String, String> requestParams, String sortBy, String sortType) {
         return showroomRepository.findAll((Specification<Showroom>) (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (StringUtils.isNotBlank(requestParams.get(ApplicationConstants.FILTER_NAME))) {
@@ -151,15 +151,15 @@ public class ShowroomServiceImpl implements ShowroomService {
             if (StringUtils.isNotBlank(requestParams.get(ApplicationConstants.FILTER_CONTACT_NUMBER))) {
                 predicates.add(criteriaBuilder.like(root.get(ApplicationConstants.FILTER_CONTACT_NUMBER).as(String.class), ApplicationConstants.STRING_PERCENTAGE + requestParams.get(ApplicationConstants.FILTER_CONTACT_NUMBER) + ApplicationConstants.STRING_PERCENTAGE));
             }
-            predicates.add(criteriaBuilder.equal(root.get(ApplicationConstants.ACTIVE), ApplicationConstants.ACTIVE));
+            predicates.add(criteriaBuilder.equal(root.get(ApplicationConstants.STATUS), ApplicationConstants.ACTIVE.toLowerCase()));
 
             query.distinct(true);
             query.multiselect(root.get(ApplicationConstants.FILTER_NAME), root.get(ApplicationConstants.FILTER_CRN), root.get(ApplicationConstants.FILTER_CONTACT_NUMBER));
             if (StringUtils.isBlank(sortBy)) {
                 if (sortType.equalsIgnoreCase(ApplicationConstants.SORT_ASC)) {
-                    query.orderBy(criteriaBuilder.asc(root.get("id")));
+                    query.orderBy(criteriaBuilder.asc(root.get("createdDate")));
                 } else {
-                    query.orderBy(criteriaBuilder.desc(root.get("id")));
+                    query.orderBy(criteriaBuilder.desc(root.get("createdDate")));
                 }
             } else {
                 if (sortType.equalsIgnoreCase(ApplicationConstants.SORT_ASC)) {
@@ -176,8 +176,8 @@ public class ShowroomServiceImpl implements ShowroomService {
     private Object getShowroomResponse(List<Showroom> showrooms) {
         List<ShowroomListResponseDTO> showroomsListDTO = new ArrayList<>();
         showrooms.forEach(showroom -> {
-            ShowroomListResponseDTO itemFilterDTO = CommonUtils.createObjectMapper().convertValue(showroom, ShowroomListResponseDTO.class);
-            showroomsListDTO.add(itemFilterDTO);
+            ShowroomListResponseDTO showroomListResponseDTO = CommonUtils.createObjectMapper().convertValue(showroom, ShowroomListResponseDTO.class);
+            showroomsListDTO.add(showroomListResponseDTO);
         });
         return showroomsListDTO;
     }
