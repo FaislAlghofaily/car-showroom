@@ -48,7 +48,7 @@ public class ShowroomServiceImpl implements ShowroomService {
     public ResponseEntity<GeneralResponseDTO> createNewShowroom(String acceptedLanguage, CreateNewShowroomRequestDTO createNewShowroomRequestDTO) {
         validateCreateShowroomRequest(acceptedLanguage, createNewShowroomRequestDTO);
         createAndSaveShowroom(createNewShowroomRequestDTO);
-        return new ResponseEntity<>(getCreateShowroomSuccessResponse(acceptedLanguage), HttpStatus.OK);
+        return new ResponseEntity<>(getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_SHOWROOM_SUCCESS), HttpStatus.OK);
     }
 
     @Override
@@ -90,7 +90,23 @@ public class ShowroomServiceImpl implements ShowroomService {
             showroom.setAddress(updateShowroomRequestDTO.getAddress());
         }
         showroomRepository.save(showroom);
-        return new ResponseEntity<>(getUpdateShowroomResponse(acceptedLanguage), HttpStatus.OK);
+        return new ResponseEntity<>(getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_SHOWROOM_SUCCESS), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<GeneralResponseDTO> inactivateShowroom(String acceptedLanguage, String crn) {
+        if (!crn.matches(ApplicationConstants.EXACTLY_10_DIGITS_REGEX)) {
+            logger.error("Invalid Contact Number" + crn);
+            throw new CustomException(acceptedLanguage, ErrorMessageConstant.DUPLICATE_SHOWROOM_ERROR);
+        }
+        if (!showroomRepository.existsByCommercialRegistrationNumber(Long.valueOf(crn))) {
+            logger.error("Error while creating showroom duplicate CRN:" + crn);
+            throw new CustomException(acceptedLanguage, ErrorMessageConstant.DUPLICATE_SHOWROOM_ERROR);
+        }
+        Showroom showroom = showroomRepository.findByCommercialRegistrationNumberAndStatus(Long.valueOf(crn), ApplicationConstants.ACTIVE);
+        showroom.setStatus(ApplicationConstants.INACTIVE);
+        showroomRepository.save(showroom);
+        return new ResponseEntity<>(getSuccessResponse(acceptedLanguage, MessageConstant.CREATE_SHOWROOM_SUCCESS), HttpStatus.OK);
     }
 
     private Showroom createAndSaveShowroom(CreateNewShowroomRequestDTO createNewShowroomRequestDTO) {
@@ -120,9 +136,9 @@ public class ShowroomServiceImpl implements ShowroomService {
         }
     }
 
-    private GeneralResponseDTO getCreateShowroomSuccessResponse(String language) {
+    private GeneralResponseDTO getSuccessResponse(String language, String message) {
         GeneralResponseDTO generalResponseDTO = new GeneralResponseDTO();
-        generalResponseDTO.setMessage(messageService.getMessage(language, MessageConstant.CREATE_SHOWROOM_SUCCESS));
+        generalResponseDTO.setMessage(messageService.getMessage(language, message));
         generalResponseDTO.setStatus(StatusEnum.SUCCESS.getStatus());
         return generalResponseDTO;
     }
@@ -185,10 +201,4 @@ public class ShowroomServiceImpl implements ShowroomService {
         }
     }
 
-    private GeneralResponseDTO getUpdateShowroomResponse(String language) {
-        GeneralResponseDTO generalResponseDTO = new GeneralResponseDTO();
-        generalResponseDTO.setMessage(messageService.getMessage(language, MessageConstant.CREATE_SHOWROOM_SUCCESS));
-        generalResponseDTO.setStatus(StatusEnum.SUCCESS.getStatus());
-        return generalResponseDTO;
-    }
 }

@@ -37,12 +37,6 @@ public class ShowroomController {
         return showroomService.createNewShowroom(acceptedLanguage, createNewShowroomRequestDTO);
     }
 
-//    @GetMapping
-//    public List<GeneralResponseDTO> getShowroomsWithFilters(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, required = false, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE) final String acceptedLanguage,
-//                                                            @RequestBody @Valid GeneralShowroomDTO generalShowroomDTO) {
-//        logger.info("Incoming request to fetch showrooms");
-//    }
-
     @GetMapping("/GetShowrooms")
     public ResponseEntity<Object> getItemsByRequestBody(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
                                                         @RequestParam(value = ApplicationConstants.PAGE_NUMBER, defaultValue = ApplicationConstants.DEFAULT_PAGE_NUMBER, required = false) final int pageNumber,
@@ -64,5 +58,10 @@ public class ShowroomController {
                                                              @PathVariable String crn,
                                                              @RequestBody(required = false) UpdateShowroomRequestDTO updateShowroomRequestDTO) {
         return showroomService.updateShowroom(acceptedLanguage, crn, updateShowroomRequestDTO);
+    }
+    @PutMapping("/inactivateShowroom/{crn}")
+    public ResponseEntity<GeneralResponseDTO> updateShowroom(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
+                                                             @PathVariable String crn) {
+        return showroomService.inactivateShowroom(acceptedLanguage, crn);
     }
 }
