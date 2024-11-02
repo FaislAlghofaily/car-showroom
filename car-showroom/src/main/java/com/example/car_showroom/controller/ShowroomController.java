@@ -6,6 +6,8 @@ import com.example.car_showroom.dto.showroom.CreateNewShowroomRequestDTO;
 import com.example.car_showroom.dto.showroom.ShowroomFiltersDTO;
 import com.example.car_showroom.dto.showroom.UpdateShowroomRequestDTO;
 import com.example.car_showroom.service.ShowroomService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,7 @@ public class ShowroomController {
 
     /**
      * this api is responsible for getting showrooms with dynamic filters
+     *
      * @param acceptedLanguage
      * @param pageNumber
      * @param pageLimit
@@ -47,8 +50,13 @@ public class ShowroomController {
      * @param filters
      * @return
      */
+    @Parameters({
+            @Parameter(name = ApplicationConstants.FILTER_NAME, description = "Name of showroom"),
+            @Parameter(name = ApplicationConstants.FILTER_CRN, description = "CRN of showroom"),
+            @Parameter(name = ApplicationConstants.FILTER_CONTACT_NUMBER, description = "Contact Number of showroom")
+    })
     @GetMapping("/GetShowrooms")
-    public ResponseEntity<Object> getItemsByRequestBody(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
+    public ResponseEntity<Object> getShowroomsWithFilters(@RequestHeader(value = ApplicationConstants.HEADER_LANGUAGE, defaultValue = ApplicationConstants.DEFAULT_LANGUAGE, required = false) final String acceptedLanguage,
                                                         @RequestParam(value = ApplicationConstants.PAGE_NUMBER, defaultValue = ApplicationConstants.DEFAULT_PAGE_NUMBER, required = false) final int pageNumber,
                                                         @RequestParam(value = ApplicationConstants.PAGE_LIMIT, defaultValue = ApplicationConstants.DEFAULT_PAGE_LIMIT, required = false) final int pageLimit,
                                                         @RequestParam(value = ApplicationConstants.SORT_BY, required = false) final String sortBy,
@@ -59,6 +67,7 @@ public class ShowroomController {
 
     /**
      * this api is responsible for fetching a showroom using CRN
+     *
      * @param acceptedLanguage
      * @param crn
      * @return
@@ -71,6 +80,7 @@ public class ShowroomController {
 
     /**
      * this api is responsible for updating showroom's address, contactNumber, managerName
+     *
      * @param acceptedLanguage
      * @param crn
      * @param updateShowroomRequestDTO
@@ -85,6 +95,7 @@ public class ShowroomController {
 
     /**
      * this api is responsible for inactivating showroom
+     *
      * @param acceptedLanguage
      * @param crn
      * @return
