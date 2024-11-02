@@ -24,11 +24,11 @@ spring:
         auto: validate
   jdbc:
     time_zone: UTC
-#  flyway:
-#    enabled: true
-#    baseline-on-migrate: true
-#    locations:
-#      - classpath:migration
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations:
+      - classpath:migration
     encoding: UTF-8
   jackson:
     default-property-inclusion: non_null
@@ -38,10 +38,6 @@ spring:
 #    id: swagger
 #    secret: swagger
 
-springdoc:
-  swagger-ui:
-    enabled: true
-    path: /swagger-ui.html
 
 memcache:
   hosts: 99.80.225.18:11211 #Ip where Memcache is installed
