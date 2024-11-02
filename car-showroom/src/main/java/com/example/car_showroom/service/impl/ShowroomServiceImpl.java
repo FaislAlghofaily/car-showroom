@@ -131,6 +131,7 @@ public class ShowroomServiceImpl implements ShowroomService {
 
     /**
      * this method is responsible for inactivating showroom
+     *
      * @param acceptedLanguage
      * @param crn
      * @return
@@ -145,7 +146,8 @@ public class ShowroomServiceImpl implements ShowroomService {
             logger.error("Error while creating showroom duplicate CRN:" + crn);
             throw new CustomException(acceptedLanguage, ErrorMessageConstant.NO_SHOWROOM_FOUND);
         }
-        Showroom showroom = showroomRepository.findByCommercialRegistrationNumberAndStatus(Long.valueOf(crn), ApplicationConstants.ACTIVE);
+        Showroom showroom = Optional.ofNullable(showroomRepository.findByCommercialRegistrationNumberAndStatus(Long.valueOf(crn), ApplicationConstants.ACTIVE)).orElseThrow(() ->
+                new CustomException(acceptedLanguage, ErrorMessageConstant.NO_SHOWROOM_FOUND));
         showroom.setStatus(ApplicationConstants.INACTIVE);
         showroomRepository.save(showroom);
         return new ResponseEntity<>(messageHelper.getSuccessResponse(acceptedLanguage, MessageConstant.INACTIVATE_SHOWROOM_SUCCESS), HttpStatus.OK);
@@ -166,6 +168,7 @@ public class ShowroomServiceImpl implements ShowroomService {
 
     /**
      * this method is responsible for validating createNewShowroomRequestDTO
+     *
      * @param acceptedLanguage
      * @param createNewShowroomRequestDTO
      */
@@ -186,6 +189,7 @@ public class ShowroomServiceImpl implements ShowroomService {
 
     /**
      * this method is responsible for fetching showrooms using dynamic filters then sort them based on sortBy param
+     *
      * @param pageRequest
      * @param requestParams
      * @param sortBy
