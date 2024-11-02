@@ -114,7 +114,8 @@ public class ShowroomServiceImpl implements ShowroomService {
     @Override
     public ResponseEntity<GeneralResponseDTO> updateShowroom(String acceptedLanguage, String crn, UpdateShowroomRequestDTO updateShowroomRequestDTO) {
         validateUpdateRequest(acceptedLanguage, updateShowroomRequestDTO, crn);
-        Showroom showroom = showroomRepository.findByCommercialRegistrationNumberAndStatus(Long.valueOf(crn), ApplicationConstants.ACTIVE);
+        Showroom showroom = Optional.ofNullable(showroomRepository.findByCommercialRegistrationNumberAndStatus(Long.valueOf(crn), ApplicationConstants.ACTIVE)).orElseThrow(() ->
+                new CustomException(acceptedLanguage, ErrorMessageConstant.NO_SHOWROOM_FOUND));
         if (!StringUtils.isBlank(updateShowroomRequestDTO.getContactNumber())) {
             showroom.setContactNumber(Long.valueOf(updateShowroomRequestDTO.getContactNumber()));
         }
@@ -155,6 +156,7 @@ public class ShowroomServiceImpl implements ShowroomService {
         BeanUtils.copyProperties(createNewShowroomRequestDTO, showroom);
         showroom.setCreatedDate(new Date());
         showroom.setUpdatedDate(new Date());
+        showroom.setStatus(ApplicationConstants.ACTIVE);
         showroom.setCommercialRegistrationNumber(Long.valueOf(createNewShowroomRequestDTO.getCrn()));
         if (!StringUtils.isBlank(createNewShowroomRequestDTO.getContactNumber())) {
             showroom.setContactNumber(Long.valueOf(createNewShowroomRequestDTO.getContactNumber()));
