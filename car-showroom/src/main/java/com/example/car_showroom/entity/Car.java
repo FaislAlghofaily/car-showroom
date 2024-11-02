@@ -10,9 +10,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GenerationType;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -28,39 +25,24 @@ public class Car {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "showroom_id")
+    @JoinColumn(name = "showroom_id", nullable = false)
     private Showroom showroom;
-
-    @NotNull
-    @Column(name = "vin")
-    @Size(min = 1, max = 25)
+    @Column(name = "vin", nullable = false, length = 25)
     private String vin;
-    @NotNull
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private String status;
-    @NotNull
-    @Size(min = 1, max = 25)
-    @Column(name = "maker")
+    @Column(name = "maker", nullable = false, length = 25)
     private String maker;
-    @NotNull
-    @Column(name = "model")
-    @Size(min = 1, max = 25)
+    @Column(name = "model", length = 25, nullable = false)
     private String model;
-
-    @NotNull
-    @Column(name = "model_year")
-    @Digits(integer = 4, fraction = 0)
+    @Column(name = "model_year", nullable = false, length = 4)
     private Integer modelYear;
-
-    @NotNull
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
 
     @CreationTimestamp
-    @Column(name = "created_date")
+    @Column(name = "created_date", nullable = false, updatable = false)
     private Date createdDate;
 
     @UpdateTimestamp

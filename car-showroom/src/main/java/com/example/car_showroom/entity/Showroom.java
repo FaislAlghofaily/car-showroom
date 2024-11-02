@@ -7,9 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -24,30 +21,21 @@ public class Showroom {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotNull
-    @Column(name = "name")
-    @Size(min = 1, max = 100)
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
-    @NotNull
-    @Column(name = "commercial_registration_number")
-    @Digits(integer = 10, fraction = 0)
+    @Column(name = "commercial_registration_number", nullable = false, length = 10)
     private Long commercialRegistrationNumber;
-    @Column(name = "manager_name")
-    @Size(min = 1, max = 100)
+    @Column(name = "manager_name", length = 100)
     private String managerName;
-    @NotNull
-    @Column(name = "contact_number")
-    @Digits(integer = 15, fraction = 0)
+    @Column(name = "contact_number", nullable = false, length = 15)
     private Long contactNumber;
-    @Column(name = "address")
-    @Size(min = 1, max = 255)
+    @Column(name = "address", length = 255)
     private String address;
-    @NotNull
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private String status;
 
     @CreationTimestamp
-    @Column(name = "created_date")
+    @Column(name = "created_date", updatable = false)
     private Date createdDate;
 
     @UpdateTimestamp
