@@ -1,8 +1,13 @@
 package com.example.car_showroom.dto.user;
 
-public class LoginUserDTO {
-    private String email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
+public class LoginUserDTO {
+    @NotBlank
+    @Size(min = 1, max = 100)
+    private String email;
+    @NotBlank
     private String password;
 
     public String getEmail() {

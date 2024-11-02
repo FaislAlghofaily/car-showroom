@@ -10,5 +10,6 @@ public class ErrorMessageConstant {
     public static final String NO_SHOWROOM_FOUND = "no.showroom.found";
     public static final String INVALID_CONTACT_NUMBER = "invalid.contact.number";
     public static final String INVALID_CRN = "invalid.crn";
+    public static final String USER_NOT_FOUND = "user.not.found";
 
 }

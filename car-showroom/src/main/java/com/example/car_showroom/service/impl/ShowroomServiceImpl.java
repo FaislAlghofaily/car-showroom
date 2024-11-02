@@ -246,7 +246,7 @@ public class ShowroomServiceImpl implements ShowroomService {
         }
         if (!showroomRepository.existsByCommercialRegistrationNumber(Long.valueOf(crn))) {
             logger.error("Error while creating showroom duplicate CRN:" + crn);
-            throw new CustomException(acceptedLanguage, ErrorMessageConstant.DUPLICATE_SHOWROOM_ERROR);
+            throw new CustomException(acceptedLanguage, ErrorMessageConstant.NO_SHOWROOM_FOUND);
         }
         if (!StringUtils.isBlank(updateShowroomRequestDTO.getContactNumber()) && !updateShowroomRequestDTO.getContactNumber().matches(ApplicationConstants.MAX_15_DIGITS_REGEX)) {
             logger.error("Invalid Contact Number" + updateShowroomRequestDTO.getContactNumber());

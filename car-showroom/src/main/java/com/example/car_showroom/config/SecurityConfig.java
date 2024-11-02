@@ -1,5 +1,7 @@
 package com.example.car_showroom.config;
 
+import com.example.car_showroom.constant.ApplicationConstants;
+import com.example.car_showroom.constant.ErrorMessageConstant;
 import com.example.car_showroom.exception.CustomException;
 import com.example.car_showroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new CustomException("User not found"));
+                .orElseThrow(() -> new CustomException(ApplicationConstants.DEFAULT_LANGUAGE, ErrorMessageConstant.USER_NOT_FOUND));
     }
 
     @Bean
