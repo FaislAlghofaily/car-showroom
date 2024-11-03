@@ -4,6 +4,8 @@ import com.example.car_showroom.constant.ApplicationConstants;
 import com.example.car_showroom.constant.ErrorCodeConstant;
 import com.example.car_showroom.constant.ErrorMessageConstant;
 import com.example.car_showroom.service.MessageService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.HibernateException;
 import org.slf4j.Logger;
@@ -12,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AccountStatusException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -107,6 +112,68 @@ public class ApplicationExceptionHandler {
     }
 
     /**
+     * this method is used to handle incorrect username or password exception
+     * @param exception
+     * @return
+     */
+    @ExceptionHandler({BadCredentialsException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ErrorResponse handleBadCredentialsException(BadCredentialsException exception) {
+        logger.error("Incorrect credentials  Occurred {}", exception);
+        //get the error msg from property file
+        String errorMessage = messageService.getMessage(getSelectedLanguage(), ErrorMessageConstant.INCORRECT_CREDENTIALS);
+        return this.buildErrorResponse(HttpStatus.UNAUTHORIZED, errorMessage);
+    }
+
+    /**
+     * this method to handle unauthorized access exception
+     * @param exception
+     * @return
+     */
+    @ExceptionHandler({AccessDeniedException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ErrorResponse handleAccessDeniedException(AccessDeniedException exception) {
+        logger.error("UNAUTHORIZED access {}", exception);
+        //get the error msg from property file
+        String errorMessage = messageService.getMessage(getSelectedLanguage(), ErrorMessageConstant.NOT_AUTHORIZED);
+        return this.buildErrorResponse(HttpStatus.UNAUTHORIZED, errorMessage);
+    }
+
+
+    /**
+     * this method is to handle invalid JWT tokens
+     * @param exception
+     * @return
+     */
+
+    @ExceptionHandler({SignatureException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ErrorResponse handleSignatureException(SignatureException exception) {
+        logger.error("Invalid JWT token Error Occurred {}", exception);
+        //get the error msg from property file
+        String errorMessage = messageService.getMessage(getSelectedLanguage(), ErrorMessageConstant.INVALID_JWT);
+        return this.buildErrorResponse(HttpStatus.UNAUTHORIZED, errorMessage);
+    }
+
+    /**
+     * this method is to handle Expired JWT tokens
+     * @param exception
+     * @return
+     */
+    @ExceptionHandler({ExpiredJwtException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ErrorResponse handleExpiredJwtException(ExpiredJwtException exception) {
+        logger.error("Expired JWT token Occurred {} Language {} ", exception);
+        //get the error msg from property file
+        String errorMessage = messageService.getMessage(getSelectedLanguage(), ErrorMessageConstant.EXPIRED_JWT);
+        return this.buildErrorResponse(HttpStatus.UNAUTHORIZED, errorMessage);
+    }
+
+    /**
      * This method is used to create error response
      *
      * @param httpStatus   - http error code
@@ -148,4 +215,5 @@ public class ApplicationExceptionHandler {
         }
         return language;
     }
+
 }
