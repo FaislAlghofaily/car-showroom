@@ -1,0 +1,689 @@
+{
+	"info": {
+		"_postman_id": "f396fe26-57bc-427a-b5cb-181fd91b62d1",
+		"name": "Showrooms",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23303552"
+	},
+	"item": [
+		{
+			"name": "Shoroom",
+			"item": [
+				{
+					"name": "create new showroom",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"random_number\", _.random(1, 50000000000))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accepted-language",
+								"value": "en",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Qassim showroom\",\r\n  \"crn\": \"1223344521\",\r\n  \"managerName\": \"Faisal Alghofaili\",\r\n  \"contactNumber\": \"555137152\",\r\n  \"address\": \"Qassim - alrass\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/showroom/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"showroom",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update showroom",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"random_number\", _.random(1, 50000000000))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accepted-language",
+								"value": "en",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"managerName\": \"Mohammed AlQahtani\",\r\n  \"contactNumber\": \"555342187\",\r\n  \"address\": \"Qassim - Buridah\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/showroom/:crn",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"showroom",
+								":crn"
+							],
+							"variable": [
+								{
+									"key": "crn",
+									"value": "1223344521"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "INACTIVATE showroom",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"random_number\", _.random(1, 50000000000))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accepted-language",
+								"value": "en",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/showroom/inactivateShowroom/:crn",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"showroom",
+								"inactivateShowroom",
+								":crn"
+							],
+							"variable": [
+								{
+									"key": "crn",
+									"value": "1122334456"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch showroom by crn",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"random_number\", _.random(1, 50000000000))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accepted-language",
+								"value": "en",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/showroom/:crn",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"showroom",
+								":crn"
+							],
+							"variable": [
+								{
+									"key": "crn",
+									"value": "1223344521"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fetch showrooms by filters",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"random_number\", _.random(1, 50000000000))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accepted-language",
+								"value": "en",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/showroom/GetShowrooms?pageNumber=1&pageLimit=5&sortType=asc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"showroom",
+								"GetShowrooms"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageLimit",
+									"value": "5"
+								},
+								{
+									"key": "sortType",
+									"value": "asc"
+								},
+								{
+									"key": "sortBy",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "commercialRegistrationNumber",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "contactNumber",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Car",
+			"item": [
+				{
+					"name": "fetch cars by filters",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"random_number\", _.random(1, 50000000000))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accepted-language",
+								"value": "en",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/car/GetCars?pageNumber=1&pageLimit=5&sortType=asc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"car",
+								"GetCars"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageLimit",
+									"value": "5"
+								},
+								{
+									"key": "sortType",
+									"value": "asc"
+								},
+								{
+									"key": "sortBy",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "commercialRegistrationNumber",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "contactNumber",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "vin",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "model",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "modelYear",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "maker",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "price",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create new car",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"random_number\", _.random(1, 50000000000))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accepted-language",
+								"value": "en",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"vin\": \"1121124111415\",\r\n  \"maker\": \"Chevrolet\",\r\n  \"model\": \"Silverado\",\r\n  \"modelYear\": 2013,\r\n  \"price\": 150000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/car/:crn",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"car",
+								":crn"
+							],
+							"variable": [
+								{
+									"key": "crn",
+									"value": "1122334456"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "signup",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"random_number\", _.random(1, 50000000000))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accepted-language",
+								"value": "en",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"Faisl.s.alghofailiy@gmail.com\",\r\n  \"password\" : \"MyPassword\",\r\n  \"fullName\" : \"Faisal Alghofaili\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"random_number\", _.random(1, 50000000000))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accepted-language",
+								"value": "ar",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"Faisl.s.alghofailiy@gmail.com\",\r\n  \"password\" : \"MyPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "inherit"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGYWlzbC5zLmFsZ2hvZmFpbGl5QGdtYWlsLmNvbSIsImlhdCI6MTczMDY0MDIzOCwiZXhwIjoxNzMwNjQzODM4fQ.FsQ6JgH-yBVzd7c08Fn4yIZwhSyKc3LLvaqbxHvj-AI",
+			"type": "string"
+		}
+	]
+}
