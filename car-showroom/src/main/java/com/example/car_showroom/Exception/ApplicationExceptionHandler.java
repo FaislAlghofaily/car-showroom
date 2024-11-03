@@ -11,12 +11,11 @@ import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -103,16 +102,12 @@ public class ApplicationExceptionHandler {
     @ResponseBody
     public ErrorResponse handleException(MethodArgumentNotValidException exception) {
         logger.error("MethodArgumentNotValid Exception Occurred ", exception);
-        List<String> errorMessages = new ArrayList<>();
-        exception.getBindingResult().getAllErrors().forEach(error -> errorMessages.add(((DefaultMessageSourceResolvable) error.getArguments()[0]).getCode() + " " + error.getDefaultMessage()));
-        String errorMessage = errorMessages.toString().replaceAll("]", "");
-        errorMessage = errorMessage.replaceAll("\\[", "");
-        logger.error("Errors : " + errorMessage);
-        return this.buildErrorResponse(HttpStatus.BAD_REQUEST, errorMessage, ErrorCodeConstant.BAD_REQUEST_S1);
+        return this.buildErrorResponse(HttpStatus.BAD_REQUEST, getMethodArgumentNotValidExceptionErrorMessage(exception), ErrorCodeConstant.BAD_REQUEST_S1);
     }
 
     /**
      * this method is used to handle incorrect username or password exception
+     *
      * @param exception
      * @return
      */
@@ -128,6 +123,7 @@ public class ApplicationExceptionHandler {
 
     /**
      * this method to handle unauthorized access exception
+     *
      * @param exception
      * @return
      */
@@ -144,6 +140,7 @@ public class ApplicationExceptionHandler {
 
     /**
      * this method is to handle invalid JWT tokens
+     *
      * @param exception
      * @return
      */
@@ -160,6 +157,7 @@ public class ApplicationExceptionHandler {
 
     /**
      * this method is to handle Expired JWT tokens
+     *
      * @param exception
      * @return
      */
@@ -170,6 +168,16 @@ public class ApplicationExceptionHandler {
         logger.error("Expired JWT token Occurred {} Language {} ", exception);
         //get the error msg from property file
         String errorMessage = messageService.getMessage(getSelectedLanguage(), ErrorMessageConstant.EXPIRED_JWT);
+        return this.buildErrorResponse(HttpStatus.UNAUTHORIZED, errorMessage);
+    }
+
+    @ExceptionHandler({InternalAuthenticationServiceException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ErrorResponse handleExpiredJwtException(InternalAuthenticationServiceException exception) {
+        logger.error("Expired JWT token Occurred {} Language {} ", exception);
+        //get the error msg from property file
+        String errorMessage = messageService.getMessage(getSelectedLanguage(), ErrorMessageConstant.USER_NOT_FOUND);
         return this.buildErrorResponse(HttpStatus.UNAUTHORIZED, errorMessage);
     }
 
@@ -214,6 +222,10 @@ public class ApplicationExceptionHandler {
             language = request.getParameter(ApplicationConstants.HEADER_LANGUAGE);
         }
         return language;
+    }
+
+    private String getMethodArgumentNotValidExceptionErrorMessage(MethodArgumentNotValidException exception) {
+        return exception.getBindingResult().getFieldError().getField() + " " + messageService.getMessage(getSelectedLanguage(), exception.getBindingResult().getAllErrors().get(0).getDefaultMessage());
     }
 
 }

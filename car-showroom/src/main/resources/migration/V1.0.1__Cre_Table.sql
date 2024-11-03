@@ -30,6 +30,22 @@ CREATE TABLE IF NOT EXISTS `cars` (
   CONSTRAINT `cars_fk_showrooms` FOREIGN KEY (`showroom_id`) REFERENCES `showrooms` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 
+
+CREATE TABLE `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `full_name` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
+
+INSERT INTO users ( `full_name`, `email`, `password`, `created_date`, `updated_date`)
+VALUES
+( 'admin', 'admin@gmail.com', '$2a$10$FwqfreP0VN5gVi668ei34ODIqeTerR6QPe9sGYwFaxFjRCuN5S23m', SYSDATE(), SYSDATE());
+
+
 INSERT INTO showrooms ( `name`, `commercial_registration_number`, `manager_name`, `contact_number`, `address`, `created_date`, `updated_date`)
 VALUES
 ( 'Riyadh showroom', 1100423874, 'Mohammed Alqahtani', 5555144398, 'Riyadh - king abdulaziz street', SYSDATE(), SYSDATE()),

@@ -1,10 +1,12 @@
 package com.example.car_showroom.service.impl;
 
 
+import com.example.car_showroom.constant.ApplicationConstants;
 import com.example.car_showroom.dto.user.CreateUserDTO;
 import com.example.car_showroom.dto.user.LoginResponseDTO;
 import com.example.car_showroom.dto.user.LoginUserDTO;
 import com.example.car_showroom.entity.User;
+import com.example.car_showroom.exception.CustomException;
 import com.example.car_showroom.repository.UserRepository;
 import com.example.car_showroom.service.AuthenticationService;
 import com.example.car_showroom.util.JwtHelper;
@@ -29,6 +31,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public ResponseEntity<User> signup(CreateUserDTO input) {
+        if(userRepository.existsByEmail(input.getEmail())){
+            throw new CustomException(ApplicationConstants.DEFAULT_LANGUAGE, "User Already Exists");
+        }
         User user = new User();
         user.setEmail(input.getEmail());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
