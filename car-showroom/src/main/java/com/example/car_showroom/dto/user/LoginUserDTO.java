@@ -1,13 +1,14 @@
 package com.example.car_showroom.dto.user;
 
+import com.example.car_showroom.constant.ErrorMessageConstant;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class LoginUserDTO {
-    @NotBlank
+    @NotBlank(message = ErrorMessageConstant.MUST_NOT_BE_NULL)
     @Size(min = 1, max = 100)
     private String email;
-    @NotBlank
+    @NotBlank(message = ErrorMessageConstant.MUST_NOT_BE_NULL)
     private String password;
 
     public String getEmail() {

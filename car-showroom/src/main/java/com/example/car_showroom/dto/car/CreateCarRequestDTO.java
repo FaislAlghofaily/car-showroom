@@ -1,5 +1,6 @@
 package com.example.car_showroom.dto.car;
 
+import com.example.car_showroom.constant.ErrorMessageConstant;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
@@ -9,20 +10,20 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 
 public class CreateCarRequestDTO {
-    @NotNull
+    @NotNull(message = ErrorMessageConstant.MUST_NOT_BE_NULL)
     @Column(name = "vin")
     @Size(min = 1, max = 25)
     private String vin;
-    @NotNull
+    @NotNull(message = ErrorMessageConstant.MUST_NOT_BE_NULL)
     @Size(min = 1, max = 25)
     @Column(name = "maker")
     private String maker;
-    @NotNull
+    @NotNull(message = ErrorMessageConstant.MUST_NOT_BE_NULL)
     @Column(name = "model")
     @Size(min = 1, max = 25)
     private String model;
 
-    @NotNull
+    @NotNull(message = ErrorMessageConstant.MUST_NOT_BE_NULL)
     @Column(name = "model_year")
     @Digits(integer = 4, fraction = 0)
     private Integer modelYear;

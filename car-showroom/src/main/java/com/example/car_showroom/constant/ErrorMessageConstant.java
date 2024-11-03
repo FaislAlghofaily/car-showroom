@@ -15,5 +15,7 @@ public class ErrorMessageConstant {
     public static final String EXPIRED_JWT = "expired.jwt";
     public static final String NOT_AUTHORIZED = "not.authorized";
     public static final String INCORRECT_CREDENTIALS = "incorrect.credentials";
+    public static final String CRN_MUST_BE_10_DIGITS = "crn.must.be.10.digits";
+    public static final String MUST_NOT_BE_NULL = "must.not.be.null";
 
 }

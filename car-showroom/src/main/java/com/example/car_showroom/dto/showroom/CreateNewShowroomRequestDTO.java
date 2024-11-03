@@ -1,14 +1,15 @@
 package com.example.car_showroom.dto.showroom;
 
+import com.example.car_showroom.constant.ErrorMessageConstant;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class CreateNewShowroomRequestDTO {
-    @NotBlank
+    @NotBlank(message = ErrorMessageConstant.MUST_NOT_BE_NULL)
     @Size(min = 1, max = 25)
     private String name;
-    @Size(min = 10, max = 10)
-    @NotBlank
+    @Size(min = 10, max = 10, message = ErrorMessageConstant.CRN_MUST_BE_10_DIGITS)
+    @NotBlank(message = ErrorMessageConstant.MUST_NOT_BE_NULL)
     private String crn;
     @Size(min = 1, max = 300)
     private String managerName;
